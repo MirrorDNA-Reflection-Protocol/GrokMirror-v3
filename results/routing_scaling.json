@@ -1,0 +1,68 @@
+{
+  "description": "Greedy routing scaling on D_n",
+  "results": [
+    {
+      "n": 50,
+      "success_rate": 1.0,
+      "greedy_mean": 2.119365609348915,
+      "bfs_mean": 2.1018363939899833,
+      "stretch_mean": 1.008069003895381,
+      "pct_optimal": 98.74791318864776,
+      "log2_n": 5.643856189774724
+    },
+    {
+      "n": 100,
+      "success_rate": 1.0,
+      "greedy_mean": 2.4540867810292633,
+      "bfs_mean": 2.4263370332996974,
+      "stretch_mean": 1.0106374032963337,
+      "pct_optimal": 97.9313824419778,
+      "log2_n": 6.643856189774724
+    },
+    {
+      "n": 200,
+      "success_rate": 1.0,
+      "greedy_mean": 2.7937782237832414,
+      "bfs_mean": 2.77019568489714,
+      "stretch_mean": 1.0078190332831576,
+      "pct_optimal": 98.34420471650778,
+      "log2_n": 7.643856189774724
+    },
+    {
+      "n": 500,
+      "success_rate": 1.0,
+      "greedy_mean": 3.298896690070211,
+      "bfs_mean": 3.274824473420261,
+      "stretch_mean": 1.0070544968238047,
+      "pct_optimal": 98.29488465396189,
+      "log2_n": 8.965784284662087
+    },
+    {
+      "n": 1000,
+      "success_rate": 1.0,
+      "greedy_mean": 3.577288644322161,
+      "bfs_mean": 3.5487743871935966,
+      "stretch_mean": 1.0082041020510255,
+      "pct_optimal": 98.09904952476238,
+      "log2_n": 9.965784284662087
+    },
+    {
+      "n": 2000,
+      "success_rate": 1.0,
+      "greedy_mean": 3.864,
+      "bfs_mean": 3.848,
+      "stretch_mean": 1.0038416666666667,
+      "pct_optimal": 98.75,
+      "log2_n": 10.965784284662087
+    },
+    {
+      "n": 5090,
+      "success_rate": 1.0,
+      "greedy_mean": 4.317658829414707,
+      "bfs_mean": 4.27863931965983,
+      "stretch_mean": 1.0090045022511256,
+      "pct_optimal": 96.94847423711856,
+      "log2_n": 12.313449940963057
+    }
+  ]
+}

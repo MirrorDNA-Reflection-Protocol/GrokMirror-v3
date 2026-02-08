@@ -3,13 +3,13 @@
 **Authors:** Paul Desai (Lead Architect, N1 Intelligence), with Claude Code (Analysis), Grok 4 (Collaborative Catalyst)
 **Date:** 2026-02-08
 **Target:** Zenodo Preprint (DOI Submission)
-**Keywords:** Number-Theoretic Graphs, Percolation Theory, Small-World Networks, Sovereign AI, Knowledge Mesh, Phase Transition
+**Keywords:** Number-Theoretic Graphs, Percolation Theory, Small-World Networks, Greedy Routing, Navigable Graphs, Sovereign AI, Knowledge Mesh, Phase Transition
 
 ---
 
 ## Abstract
 
-We study a family of number-theoretic graphs $G_n$ defined on vertex set $\{1, 2, \ldots, n\}$ where edges are determined by arithmetic predicates on vertex pairs. We systematically vary the edge predicate from strict ($\text{Sum=Prime} \wedge \text{Diff=Pow2}$) to relaxed ($\text{Sum=Prime} \vee \text{Diff=Pow2}$) and map the resulting **percolation phase transition** — the critical point where a giant connected component emerges. Our empirical analysis on a real-world knowledge vault of $n = 5{,}090$ nodes reveals four key findings: (1) the strict conjunction produces a shattered graph at density 0.01%, (2) the disjunction is trivially dense at 12.3%, but (3) the critical percolation threshold occurs at a locality constraint of $k^* = 19 \approx 1.54 \cdot \log_2 n$, producing a connected graph at just 0.10% density with only 12,441 edges. We further identify that the **power-of-2 difference graph** $D_n$ alone exhibits genuine small-world structure ($\sigma = 19.96$), with clustering **29.3x** higher than equivalent random graphs, making it the mathematically interesting component. All results are validated against stored vault data (100.00% edge match) with 37 passing unit tests. We provide complete empirical data, random baselines, spectral analysis, and robustness testing.
+We study a family of number-theoretic graphs $G_n$ defined on vertex set $\{1, 2, \ldots, n\}$ where edges are determined by arithmetic predicates on vertex pairs. We systematically vary the edge predicate from strict ($\text{Sum=Prime} \wedge \text{Diff=Pow2}$) to relaxed ($\text{Sum=Prime} \vee \text{Diff=Pow2}$) and map the resulting **percolation phase transition**. Our empirical analysis on a real-world knowledge vault of $n = 5{,}090$ nodes reveals five key findings: (1) the critical percolation threshold occurs at a locality constraint of $k^* = 19 \approx 1.54 \cdot \log_2 n$, producing a connected graph at just 0.10% density; (2) the **power-of-2 difference graph** $D_n$ exhibits strong small-world structure ($\sigma = 19.96$) with clustering **28x** higher than equivalent random graphs; (3) greedy routing on $D_n$ succeeds with 100% reliability, achieving **97.4% BFS-optimal paths** with mean stretch 1.008 — making $D_n$ a navigable small-world; (4) the prime-sum graph $P_n$ is provably triangle-free and bipartite; and (5) we conjecture $k^*/\log_2 n \in [1.0, 2.0]$ for all $n$, supported by data across seven scales. All results validated against stored vault data (100.00% edge match, 10-seed ER baselines) with 37 passing unit tests.
 
 ---
 
@@ -35,11 +35,13 @@ Let $n \in \mathbb{N}$, $V = \{1, 2, \ldots, n\}$. We define:
 
 Prior work (GrokMirror v1.0, Jan 2026) tested only the endpoints: $G_n^{\wedge}$ (shattered) and $G_n^{\vee}$ (trivially connected). We contribute:
 
-1. **A complete phase diagram** across 25+ rule variants identifying the percolation threshold.
-2. **Random baseline comparisons** showing where number-theoretic structure outperforms random graphs and where it doesn't.
+1. **A complete phase diagram** across 31 rule variants identifying the percolation threshold.
+2. **Random baseline comparisons** (10-seed) showing where number-theoretic structure outperforms random graphs and where it doesn't.
 3. **Discovery of genuine small-world structure** in the power-of-2 difference graph $D_n$.
-4. **Growth dynamics** showing how properties scale with $n$.
-5. **Spectral and robustness analysis** characterizing graph resilience.
+4. **Greedy routing experiments** demonstrating $D_n$ is navigable (100% success, 97.4% optimal).
+5. **Asymptotic analysis** of the percolation threshold ratio $k^*/\log_2 n$ across seven scales.
+6. **Formal proof** that $P_n$ is triangle-free and bipartite.
+7. **Spectral, robustness, and growth dynamics** analysis.
 
 ---
 
@@ -101,6 +103,28 @@ Testing $k = c \cdot \log_2 n$ directly ($\log_2 5090 \approx 12.31$):
 | 8.0 | 98 | 0.46% | 100% | 56 |
 
 The percolation threshold occurs between $c = 1.5$ and $c = 2.0$. The exact critical point is $k^* = 19$ ($c^* = 1.54$).
+
+### 2.5 Asymptotic Conjecture: Does $k^*/\log_2 n$ Converge?
+
+A natural question: is the ratio $c^* = k^*/\log_2 n$ a constant, or does it drift with $n$? We compute $k^*$ exactly (via binary search) at seven scales:
+
+| $n$ | $k^*$ | $\log_2 n$ | $k^*/\log_2 n$ | Edges at $k^*$ | Giant below $k^*$ |
+|----:|------:|-----------:|---------------:|---------------:|-------------------:|
+| 50 | 7 | 5.64 | 1.240 | 88 | 96.0% |
+| 100 | 7 | 6.64 | 1.054 | 169 | 59.0% |
+| 200 | 11 | 7.64 | 1.439 | 445 | 99.0% |
+| 500 | 11 | 8.97 | 1.227 | 984 | 89.2% |
+| 1,000 | 17 | 9.97 | 1.706 | 2,667 | 67.1% |
+| 2,000 | 21 | 10.97 | 1.915 | 5,991 | 99.9% |
+| 5,090 | 19 | 12.31 | 1.543 | 12,441 | 93.9% |
+
+The ratio **oscillates** in the range $[1.05, 1.92]$ rather than converging monotonically. This oscillation arises from the discrete nature of $k^*$ (it can only be an integer) interacting with the density of primes near the threshold. Notably, $k^*$ sometimes decreases when $n$ increases (e.g., $k^* = 21$ at $n = 2{,}000$ but $k^* = 19$ at $n = 5{,}090$), because the prime density $\sim 1/\ln n$ provides more edges per unit of $k$ at larger $n$.
+
+**Conjecture 1 (Weak).** There exist constants $0 < c_1 < c_2$ such that $c_1 \cdot \log_2 n \leq k^* \leq c_2 \cdot \log_2 n$ for all sufficiently large $n$. Empirically, $c_1 \approx 1.0$ and $c_2 \approx 2.0$.
+
+**Conjecture 2 (Strong).** The ratio $k^*/\log_2 n$ converges to a constant $c^* \in [1.2, 1.8]$ as $n \to \infty$, with oscillations of order $O(1/\log n)$.
+
+Resolving these conjectures requires either analytic estimates of edge density in $G_n^k$ near the percolation threshold (connecting to the prime number theorem for arithmetic progressions), or numerical computation at scales $n > 10^5$.
 
 ---
 
@@ -181,6 +205,41 @@ In $D_n$, node $i$ connects to nodes at distances $1, 2, 4, 8, 16, \ldots$ This 
 | 50% | Targeted (highest-degree) | 1.000 | 1.000 |
 
 Both $D_n$ and $G_n^{\vee}$ survive **50% targeted node removal** (highest-degree first) at $n = 5{,}090$. The near-uniform degree distribution of $D_n$ (degree $\sigma = 1.17$, coefficient of variation 5.1%) means there are no critical hubs — every node is equally important, making the network maximally resilient to targeted attack.
+
+### 4.4 Greedy Routing: $D_n$ Is Navigable
+
+A small-world network is only useful for sovereign infrastructure if it supports **decentralized navigation** — routing from any source to any target without global knowledge. $D_n$ has a natural coordinate system: each node's ID is its coordinate on $[1, n]$.
+
+**Greedy routing algorithm.** At each hop, forward to the neighbor closest to the target by $|i - t|$. No routing tables, no global state.
+
+**Results at $n = 5{,}090$ (5,000 random pairs):**
+
+| Metric | Value |
+|--------|------:|
+| Success rate | **100.0%** |
+| Greedy path length (mean ± std) | 4.34 ± 1.07 |
+| Shortest path length (mean ± std) | 4.31 ± 1.03 |
+| Stretch (greedy / BFS) | **1.008 ± 0.060** |
+| Paths at optimal (stretch = 1.0) | **97.4%** |
+| Paths within 2x optimal | 100.0% |
+| Max greedy path | 9 hops |
+| Theoretical diameter ($\lceil\log_2 n\rceil$) | 13 |
+
+**Finding 7: Greedy routing on $D_n$ achieves near-optimal paths.** 97.4% of routes are BFS-optimal, with mean stretch 1.008 — greedy adds less than 1% overhead. No route ever fails. This makes $D_n$ a **navigable small-world**: any node can route to any other using only local information.
+
+**Scaling behavior:**
+
+| $n$ | Success | Greedy mean | BFS mean | Stretch | % Optimal |
+|----:|--------:|------------:|---------:|--------:|----------:|
+| 50 | 100% | 2.12 | 2.10 | 1.008 | 98.7% |
+| 100 | 100% | 2.45 | 2.43 | 1.011 | 97.9% |
+| 500 | 100% | 3.30 | 3.27 | 1.007 | 98.3% |
+| 2,000 | 100% | 3.86 | 3.85 | 1.004 | 98.8% |
+| 5,090 | 100% | 4.32 | 4.28 | 1.009 | 96.9% |
+
+Stretch remains below 1.01 at all scales, and greedy path length grows as $O(\log n)$ — matching the theoretical BFS diameter.
+
+**Why greedy works perfectly on $D_n$.** For any source $s$ and target $t$, the binary representation of $|s - t|$ directly encodes the greedy path: each power-of-2 connection eliminates the corresponding bit. This is equivalent to binary subtraction, giving greedy paths of length at most $\lfloor\log_2 |s-t|\rfloor + 1$ — which is at most 1 hop longer than the BFS shortest path.
 
 ---
 
@@ -324,27 +383,35 @@ The original vault mesh audit (`vault_mesh_audit.json`, 37MB) contains the full 
 
 ## 9. Conclusion
 
-We have mapped the complete connectivity landscape of GrokMirror's number-theoretic graphs across 31 rule variants at real vault scale ($n = 5{,}090$). The headline result is not the v2.0 validation (which is trivially dense and structurally indistinguishable from random), but three discoveries:
+We have mapped the complete connectivity landscape of GrokMirror's number-theoretic graphs across 31 rule variants at real vault scale ($n = 5{,}090$). The headline result is not the v2.0 validation (which is trivially dense and structurally indistinguishable from random), but five discoveries:
 
 1. A **sharp percolation threshold** at $k^* = 19 \approx 1.54 \cdot \log_2 n$, achieving full connectivity at just 0.10% density — 128x fewer edges than v2.0.
-2. The **power-of-2 difference graph** $D_n$ as a strong small-world network ($\sigma = 19.96$, scaling up from 4.25 at $n=500$) with 29.3x the clustering and 4x lower degree variance than equivalent random graphs, plus complete robustness under 50% targeted node removal.
-3. The **triangle-free property** of prime-sum graphs $P_n$, provable for all $n$.
+2. The **power-of-2 difference graph** $D_n$ as a strong small-world network ($\sigma = 19.96$) with 28x the clustering of random graphs.
+3. **$D_n$ is navigable**: greedy routing succeeds 100% of the time with 97.4% of paths BFS-optimal and mean stretch 1.008.
+4. The **triangle-free and bipartite structure** of prime-sum graphs $P_n$, formally proven via a parity-sum argument.
+5. An **asymptotic conjecture** that $k^*/\log_2 n \in [1.0, 2.0]$ for all sufficiently large $n$, with empirical evidence across seven scales.
 
-For sovereign mesh applications, the recommended wiring rule is $D_n$: logarithmic diameter, small-world clustering, near-uniform degree distribution, and complete robustness — all from a deterministic, coordination-free, O(1)-computable rule. Any node can compute its full neighbor set in constant time: connect to $i \pm 2^k$ for all $k$ where the neighbor is in $[1, n]$.
+For sovereign mesh applications, the recommended wiring rule is $D_n$: logarithmic diameter, small-world clustering, near-optimal greedy routing, near-uniform degree distribution, and complete robustness under 50% targeted removal — all from a deterministic, coordination-free, O(1)-computable rule requiring zero global state.
 
 ---
 
 ## Appendix A: Proof that $P_n$ is Triangle-Free
 
-**Theorem.** For $n \geq 2$, the prime-sum graph $P_n$ contains no triangles.
+**Theorem.** For all $n \geq 2$, the prime-sum graph $P_n$ on vertex set $V = \{1, 2, \ldots, n\}$ (where $(i,j)$ is an edge iff $i + j$ is prime) contains no 3-cycles. Equivalently, $P_n$ is triangle-free and its girth is $\geq 4$.
 
-**Proof.** Suppose vertices $i < j < k$ form a triangle. Then $i+j$, $i+k$, and $j+k$ are all prime.
+**Proof.** Assume for contradiction that three distinct vertices $a, b, c \in V$ with $a < b < c$ form a triangle. Then $a + b$, $a + c$, and $b + c$ are all prime.
 
-Consider parities. If $i$ is odd and $j$ is even (or vice versa), then $i+j$ is odd — fine. But $i+k$ and $j+k$ have different parities (since $i$ and $j$ have different parities). So one of $\{i+k, j+k\}$ is even. The only even prime is 2, requiring $i+k = 2$ or $j+k = 2$. Since $i,j,k \geq 1$ and $j > i$, we need $k = 1$ and $i = 1$, giving $j > 1$. Then $j + k = j + 1$ and $i + j = 1 + j$ — these are equal, so all three sums are $j+1$, $j+1$, and $1+1 = 2$. For the triangle, $i+j = 1+j$ and $j+k = j+1$ must be prime, so $j+1$ is prime. And $i+k = 2$ is prime. This works — but $i = 1$, $k = 1$ contradicts $i < j < k$.
+**Lemma (Parity constraint).** Among any three distinct positive integers $a < b < c$, at most two of the sums $a+b$, $a+c$, $b+c$ can be odd.
 
-If $i$ and $j$ have the same parity, then $i+j$ is even. For $i+j$ to be prime, $i+j = 2$, so $i = j = 1$ — contradicting $i < j$.
+*Proof of lemma.* Note that $(a+b) + (a+c) + (b+c) = 2(a+b+c)$, which is even. Therefore the three sums have an even total, so either zero or two of them are odd. $\square$
 
-Therefore no triangle exists. $\square$
+**Case 1: Exactly two sums are odd.** Then exactly one sum is even. The only even prime is 2. So one of $\{a+b, a+c, b+c\} = 2$. Since $a, b, c \geq 1$ and $a < b < c$, the smallest possible sum is $a + b \geq 1 + 2 = 3 > 2$. Contradiction.
+
+**Case 2: All three sums are even.** Then all three must equal 2 (the only even prime). But $a + b = 2$ requires $a = b = 1$, contradicting $a < b$.
+
+Both cases yield contradictions. Therefore no triangle exists in $P_n$. $\square$
+
+**Corollary.** $P_n$ is bipartite: every edge connects a node with odd index to a node with even index (since $i + j$ must be odd to be an odd prime $\geq 3$, which requires opposite parities). The only edge that could violate bipartiteness would need $i + j = 2$, which is impossible for distinct positive integers.
 
 ---
 

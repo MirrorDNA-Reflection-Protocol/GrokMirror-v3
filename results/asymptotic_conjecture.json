@@ -1,0 +1,77 @@
+{
+  "description": "Asymptotic analysis of percolation threshold k* vs log2(n)",
+  "results": [
+    {
+      "n": 50,
+      "k_star": 7,
+      "log2_n": 5.643856189774724,
+      "ratio": 1.2402867409489053,
+      "edges_at_threshold": 88,
+      "density_at_threshold": 0.07183673469387755,
+      "giant_frac_below": 0.96
+    },
+    {
+      "n": 100,
+      "k_star": 7,
+      "log2_n": 6.643856189774724,
+      "ratio": 1.0536049848239342,
+      "edges_at_threshold": 169,
+      "density_at_threshold": 0.03414141414141414,
+      "giant_frac_below": 0.59
+    },
+    {
+      "n": 200,
+      "k_star": 11,
+      "log2_n": 7.643856189774724,
+      "ratio": 1.4390642271259404,
+      "edges_at_threshold": 445,
+      "density_at_threshold": 0.02236180904522613,
+      "giant_frac_below": 0.99
+    },
+    {
+      "n": 500,
+      "k_star": 11,
+      "log2_n": 8.965784284662087,
+      "ratio": 1.226886533375321,
+      "edges_at_threshold": 984,
+      "density_at_threshold": 0.007887775551102205,
+      "giant_frac_below": 0.892
+    },
+    {
+      "n": 1000,
+      "k_star": 17,
+      "log2_n": 9.965784284662087,
+      "ratio": 1.7058366420958935,
+      "edges_at_threshold": 2667,
+      "density_at_threshold": 0.005339339339339339,
+      "giant_frac_below": 0.671
+    },
+    {
+      "n": 2000,
+      "k_star": 21,
+      "log2_n": 10.965784284662087,
+      "ratio": 1.9150477024587138,
+      "edges_at_threshold": 5991,
+      "density_at_threshold": 0.002996998499249625,
+      "giant_frac_below": 0.999
+    },
+    {
+      "n": 5090,
+      "k_star": 19,
+      "log2_n": 12.313449940963057,
+      "ratio": 1.5430281595406377,
+      "edges_at_threshold": 12441,
+      "density_at_threshold": 0.0009605833453332258,
+      "giant_frac_below": 0.9394891944990177
+    }
+  ],
+  "ratios": [
+    1.2402867409489053,
+    1.0536049848239342,
+    1.4390642271259404,
+    1.226886533375321,
+    1.7058366420958935,
+    1.9150477024587138,
+    1.5430281595406377
+  ]
+}
