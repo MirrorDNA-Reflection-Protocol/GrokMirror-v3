@@ -1,0 +1,7 @@
+Metric,Value,Unit
+Total Files (n),5090,count
+Calculation Time,4.6873,seconds
+Memory Usage,98.95,MB
+Diameter,3,hops
+Log2(n)+1 Limit,13.3134,hops
+Percolation (90% health),True,bool
